@@ -1,0 +1,38 @@
+name: PR preview
+
+# Builds a preview of each pull request and posts the link on the PR.
+# The preview is removed when the PR is closed.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# One writer at a time. The deploy workflow uses the same group.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  preview:
+    # Fork PRs get a read-only token, so they cannot publish a preview.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the preview
+        if: github.event.action != 'closed'
+        run: |
+          mkdir _preview
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' --exclude 'CLAUDE.md' --exclude '.gitignore' --exclude '_preview' ./ _preview/
+
+      - uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: _preview
+          pages-base-url: aliassisi.it/lorenzochiuchiu.github.io
+          wait-for-pages-deployment: true
