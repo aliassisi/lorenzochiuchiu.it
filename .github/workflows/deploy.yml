@@ -25,7 +25,7 @@ jobs:
       - name: Assemble the site
         run: |
           mkdir _site
-          rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' --exclude 'CLAUDE.md' --exclude '.gitignore' --exclude '_site' ./ _site/
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' --exclude 'CLAUDE.md' --exclude '.gitignore' --exclude '.nojekyll' --exclude '_site' ./ _site/
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:

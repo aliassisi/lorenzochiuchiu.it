@@ -12,7 +12,7 @@ It is served from an FTP folder. PR previews use GitHub Pages (`gh-pages` branch
 1. Branch, edit, open a PR.
 2. The PR gets a preview. The link is posted on the PR.
 3. Merge to `main`. The "Deploy production" workflow uploads the site to the FTP folder over FTPS. It needs the secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` and an optional variable `FTP_DIR`.
-`.claude/`, `.github/` and `CLAUDE.md` are not published.
+`.claude/`, `.github/`, `.nojekyll` and `CLAUDE.md` are not published.
 
 ## How to edit
 `index.html` is the source. It is large (over 1 MB), so search for the part you need
