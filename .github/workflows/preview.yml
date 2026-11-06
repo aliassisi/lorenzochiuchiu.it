@@ -34,5 +34,5 @@ jobs:
       - uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: _preview
-          pages-base-url: aliassisi.it/lorenzochiuchiu.github.io
+          pages-base-url: lc.aliassisi.it
           wait-for-pages-deployment: true

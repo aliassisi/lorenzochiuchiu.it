@@ -1,7 +1,7 @@
 name: Deploy production
 
-# Publishes main to the gh-pages branch. GitHub Pages serves that branch.
-# PR previews live in gh-pages/pr-preview/ and are kept by clean-exclude.
+# Uploads main to an FTP folder over FTPS.
+# PR previews still use the gh-pages branch. See preview.yml.
 
 on:
   push:
@@ -9,13 +9,12 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
-# One writer at a time. The preview workflow uses the same group.
+# One deploy at a time.
 concurrency:
-  group: gh-pages
+  group: ftp-deploy
   cancel-in-progress: false
-  queue: max
 
 jobs:
   deploy:
@@ -28,8 +27,11 @@ jobs:
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' --exclude 'CLAUDE.md' --exclude '.gitignore' --exclude '_site' ./ _site/
 
-      - uses: JamesIves/github-pages-deploy-action@v4
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          branch: gh-pages
-          folder: _site
-          clean-exclude: pr-preview/
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: _site/
+          server-dir: ${{ vars.FTP_DIR || './' }}
